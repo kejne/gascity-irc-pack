@@ -9,7 +9,7 @@ import (
 )
 
 // LoadConfig reads the bridge's environment. Secrets are accepted only from
-// IRC_PASSWORD; this package never reads or writes the Halloy config.
+// IRC_PASSWORD; this package never reads or writes a local IRC client config.
 func LoadConfig(getenv func(string) string) (Config, error) {
 	if getenv == nil {
 		getenv = os.Getenv
@@ -24,7 +24,7 @@ func LoadConfig(getenv func(string) string) (Config, error) {
 	}
 	nick := getenv("IRC_NICK")
 	return Config{
-		IRCServer:       envDefault(getenv("IRC_SERVER"), "irc.smedijan.se"),
+		IRCServer:       envDefault(getenv("IRC_SERVER"), ""),
 		IRCPort:         port,
 		IRCNick:         nick,
 		IRCUsername:     envDefault(getenv("IRC_USERNAME"), nick),
@@ -36,7 +36,7 @@ func LoadConfig(getenv func(string) string) (Config, error) {
 		GCCityName:      getenv("GC_CITY_NAME"),
 		GCTarget:        getenv("GC_TARGET"),
 		GCProvider:      envDefault(getenv("GC_PROVIDER"), "irc"),
-		GCAccountID:     envDefault(getenv("GC_ACCOUNT_ID"), "smedijan"),
+		GCAccountID:     envDefault(getenv("GC_ACCOUNT_ID"), "irc"),
 		GCScopeID:       getenv("GC_SCOPE_ID"),
 		RegisterAdapter: register,
 		RetryInitial:    time.Second,

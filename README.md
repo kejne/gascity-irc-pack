@@ -1,24 +1,23 @@
 # gascity-irc-pack
 
-A minimal IRC-to-Gas-City extmsg tracer bullet. It connects to Smedijan over
-TLS, joins one configured channel, and forwards the first non-empty `PRIVMSG`
-to one Gas City target. The process exits after successful delivery; dropped
-IRC connections are retried until delivery or shutdown.
+A standard-library Go adapter that forwards IRC `PRIVMSG` messages to a Gas
+City `extmsg` endpoint. Runtime values are environment-specific; the
+repository contains no server, account, or credential-specific configuration.
 
-## Live exercise
+## Configuration
 
-Prerequisites: a running Gas City API and an agent/session that can receive the
-configured target. The API must be reachable at `GC_API_BASE_URL`.
+Copy `config.example.env` to an untracked file such as `config.local.env` and
+fill in the values for your IRC and Gas City environments. Never commit
+credentials.
 
-1. Copy `config.example.env` to an untracked file such as `config.local.env`.
-2. Fill in the Smedijan nickname, channel, and SASL password. The Halloy file
-   at `/home/kejne/snap/halloy/common/.config/halloy/config.toml` contains the
-   local server and SASL settings; copy credentials manually, never commit or
-   print them.
-3. Set `GC_CITY_NAME` and `GC_TARGET` (for example, `mayor`). `GC_TARGET` is
-   the configured Gas City recipient; it is carried as extmsg's
-   `explicit_target`.
-4. Run:
+- `IRC_SERVER`, `IRC_PORT`, and `IRC_CHANNEL` select the IRC service.
+- `IRC_NICK`, `IRC_SASL_USERNAME`, and `IRC_PASSWORD` configure identity and
+  optional SASL PLAIN authentication.
+- `GC_API_BASE_URL`, `GC_CITY_NAME`, `GC_PROVIDER`, `GC_ACCOUNT_ID`, and
+  `GC_TARGET` select the Gas City destination.
+- Set `GC_REGISTER_ADAPTER=false` when the adapter is already registered.
+
+## Run
 
 ```sh
 set -a
@@ -27,31 +26,29 @@ set +a
 go run ./cmd/app
 ```
 
-The bridge registers the `irc`/`smedijan` adapter with Gas City, connects to
-`irc.smedijan.se:6697` using TLS 1.2+, negotiates SASL PLAIN when a password is
-set, joins `IRC_CHANNEL`, and posts to:
+The bridge connects over TLS, joins the configured channel, retries dropped
+connections, and forwards the first non-empty matching message. Delivery uses
+Gas City's wire-compatible envelope at:
 
 ```
 POST /v0/city/<GC_CITY_NAME>/extmsg/inbound
 ```
 
-The request uses Gas City's wire-compatible envelope (`message.conversation`,
-`message.actor`, `message.text`, `message.explicit_target`, and a dedup key).
-No IRC message text or credentials are logged by the bridge.
-
-If the adapter was registered previously, set `GC_REGISTER_ADAPTER=false`.
-For a bound conversation instead of an explicit target, bind the same provider,
-account, and channel with `gc extmsg bind`, then choose the corresponding
-recipient configuration.
-
 ## Development
 
-The implementation is standard-library-only Go. Run the canonical checks:
+Install the pinned toolchain and hooks, then run the canonical checks:
 
 ```sh
 mise install
+hk install
 hk check
 ```
 
-The focused tests use `net.Pipe` and `httptest`; they do not contact IRC or
-Gas City.
+Run the full suite, including security checks, with:
+
+```sh
+mise exec -- hk run pre-push
+```
+
+The focused tests use `net.Pipe` and `httptest`; they do not contact IRC or Gas
+City.

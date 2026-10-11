@@ -70,7 +70,7 @@ func TestBridgeDeliversOneMessage(t *testing.T) {
 				return
 			}
 		}
-		_, err := io.WriteString(clientConn, ":irc.smedijan.se CAP nick LS :multi-prefix\r\n:irc.smedijan.se 001 nick :welcome\r\n")
+		_, err := io.WriteString(clientConn, ":irc.example.com CAP nick LS :multi-prefix\r\n:irc.example.com 001 nick :welcome\r\n")
 		if err != nil {
 			serverDone <- err
 			return
@@ -93,8 +93,8 @@ func TestBridgeDeliversOneMessage(t *testing.T) {
 	}()
 
 	cfg := Config{
-		IRCServer: "irc.smedijan.se", IRCPort: 6697, IRCNick: "nick", IRCChannel: "#city",
-		GCAPIBaseURL: api.URL, GCCityName: "demo", GCTarget: "mayor", GCProvider: "irc", GCAccountID: "smedijan",
+		IRCServer: "irc.example.com", IRCPort: 6697, IRCNick: "nick", IRCChannel: "#city",
+		GCAPIBaseURL: api.URL, GCCityName: "demo", GCTarget: "mayor", GCProvider: "irc", GCAccountID: "example-account",
 		RetryInitial: time.Nanosecond, RetryMax: time.Nanosecond,
 	}
 	b := &Bridge{Config: cfg, HTTP: api.Client(), Dial: func(context.Context) (net.Conn, error) { return serverConn, nil }, Now: func() time.Time { return time.Date(2026, 10, 11, 17, 0, 0, 0, time.UTC) }}

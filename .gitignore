@@ -44,6 +44,14 @@ go.work.sum
 .beads/proxieddb/
 *.gate.lock*
 
-# Gas City
+# Gas City runtime and worktrees. Keep committed project configuration and
+# scripts under .gc tracked, but ignore generated city state and checkouts.
+/.agents/
+/.gc/*
+!/.gc/scripts/
+!/.gc/scripts/**
+!/.gc/settings.json
+/.pi/
+/worktrees/*
 .beads/*
 !.beads/identity.toml
