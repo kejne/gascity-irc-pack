@@ -24,3 +24,5 @@ mise exec -- hk run pre-push
 ```
 
 The repository uses mise to pin developer tools and hk to provide formatting, vetting, linting, tests, module-tidy validation, and GitHub Actions checks. Commits use conventional commit messages.
+
+<!-- delivery workflow smoke test -->
