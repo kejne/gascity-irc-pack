@@ -1,0 +1,10 @@
+[tools]
+actionlint = "latest"
+golangci-lint = "2.14.0"
+go = "1.26.6"
+"go:github.com/securego/gosec/v2/cmd/gosec" = "latest"
+"go:golang.org/x/vuln/cmd/govulncheck" = "latest"
+hk = "latest"
+pinact = "latest"
+shellcheck = "latest"
+zizmor = "latest"
