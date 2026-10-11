@@ -54,7 +54,3 @@ go.work.sum
 /worktrees/*
 .beads/*
 !.beads/identity.toml
-
-# Local IRC client state must not be committed.
-/.halloy/
-/halloy/
