@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "proxied-server",
+  "dolt_database": "gip",
+  "project_id": "69b8a516-d155-4621-9495-20d67839989c"
+}
