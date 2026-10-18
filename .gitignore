@@ -49,4 +49,7 @@ go.work.sum
 /.gc/
 /.pi/
 /worktrees/
-.beads/
+
+# Gas City
+.beads/*
+!.beads/identity.toml
